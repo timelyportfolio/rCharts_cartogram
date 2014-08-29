@@ -1,0 +1,6 @@
+carto:
+  jshead:
+    - js/d3.v3.min.js
+    - js/topojson.v1.min.js
+    - js/colorbrewer.js
+    - js/cartogram.js
