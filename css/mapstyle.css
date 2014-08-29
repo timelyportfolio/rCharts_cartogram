@@ -1,20 +1,9 @@
-.sphere {
-  fill: #fff;
+path.country {
+  stroke: #666;
+  stroke-width: .5;
 }
- 
-.land {
-  fill: #000;
-}
- 
-.boundary {
-  fill: none;
-  stroke: #fff;
-  stroke-linejoin: round;
-  stroke-linecap: round;
-  vector-effect: non-scaling-stroke;
-}
- 
-.overlay {
-  fill: none;
-  pointer-events: all;
+
+path.country:hover {
+  stroke: #000;
+  stroke-width: 1;
 }

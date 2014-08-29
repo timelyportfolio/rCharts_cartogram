@@ -3,54 +3,79 @@
   
   //copied mostly from https://gist.github.com/mbostock/8fadc5ac9c2a9e7c5ba2
   
-  var width = 960,
-      height = 960;
-   
-  var projection = d3.geo.mercator()
-      .translate([width / 2, height / 2])
-      .scale((width - 1) / 2 / Math.PI);
-   
-  var zoom = d3.behavior.zoom()
-      .scaleExtent([1, 8])
-      .on("zoom", zoomed);
-   
-  var path = d3.geo.path()
-      .projection(projection);
-   
-  var svg = d3.select( {{chartId}} ).append("svg")
-      .attr("width", width)
-      .attr("height", height)
-    .append("g");
-   
-  var g = svg.append("g");
-   
-  svg.append("rect")
-      .attr("class", "overlay")
-      .attr("width", width)
-      .attr("height", height);
-   
-  svg
-      .call(zoom)
-      .call(zoom.event);
-   
-  d3.json( opts.map , function(error, world) {
-    g.append("path")
-        .datum({type: "Sphere"})
-        .attr("class", "sphere")
-        .attr("d", path);
-   
-    g.append("path")
-        .datum(topojson.merge(world, world.objects.countries.geometries))
-        .attr("class", "land")
-        .attr("d", path);
-   
-    g.append("path")
-        .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
-        .attr("class", "boundary")
-        .attr("d", path);
-  });
-   
-  function zoomed() {
-    g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
-  }
+  //drawCartogram = (function(){
+    colors = colorbrewer.RdYlBu[3]
+            .reverse()
+            .map(function(rgb) { return d3.hsl(rgb); });
+
+
+    var width = opts.width,
+      height = opts.height;
+    
+    var proj = (opts.projection) ? opts.projection : d3.geo.mercator(),
+      topology,
+      geometries,
+      rawData,
+      dataById = {},
+      carto = d3.cartogram()
+        .projection(proj)
+        .properties(function(d) {
+          return dataById[d.id];
+        })
+        .value(function(d) {
+          return +d.properties[field];
+        });
+
+    
+    
+    proj
+        .translate([width / 2, height / 2])
+        .scale((width - 1) / 2 / Math.PI);
+     
+    var zoom = d3.behavior.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", zoomed);
+     
+    var path = d3.geo.path()
+        .projection(proj);
+     
+    var svg = d3.select( {{chartId}} ).select("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("id","map")
+      .append("g");
+     
+    var g = svg.append("g");
+     
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", width)
+        .attr("height", height);
+     
+    svg
+        .call(zoom)
+        .call(zoom.event);
+     
+    d3.json( opts.map , function(error, world) {
+      g.append("path")
+          .datum({type: "Sphere"})
+          .attr("class", "sphere")
+          .attr("d", path);
+     
+      g.append("path")
+          .datum(topojson.merge(world, world.objects.countries.geometries))
+          .attr("class", "land")
+          .attr("d", path);
+     
+      g.append("path")
+          .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
+          .attr("class", "boundary")
+          .attr("d", path);
+    });
+     
+    function zoomed() {
+      g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
+  //})();
+  
 </script>

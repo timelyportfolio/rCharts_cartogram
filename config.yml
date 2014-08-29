@@ -1,8 +1,16 @@
 carto:
   jshead:
     - js/d3.v3.min.js
-    - js/topojson.v1.min.js
+    - js/topojson.js
     - js/colorbrewer.js
     - js/cartogram.js
   css:
     - css/mapstyle.css
+  cdn:
+    jshead:
+      - js/d3.v3.min.js
+      - js/topojson.js
+      - js/colorbrewer.js
+      - js/cartogram.js
+    css:
+      - css/mapstyle.css
