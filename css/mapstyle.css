@@ -1,0 +1,20 @@
+.sphere {
+  fill: #fff;
+}
+ 
+.land {
+  fill: #000;
+}
+ 
+.boundary {
+  fill: none;
+  stroke: #fff;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+ 
+.overlay {
+  fill: none;
+  pointer-events: all;
+}

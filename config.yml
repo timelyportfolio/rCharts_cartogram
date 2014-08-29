@@ -4,3 +4,5 @@ carto:
     - js/topojson.v1.min.js
     - js/colorbrewer.js
     - js/cartogram.js
+  css:
+    - css/mapstyle.css
