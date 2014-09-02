@@ -1,0 +1,115 @@
+<!doctype HTML>
+<meta charset = 'utf-8'>
+<html>
+  <head>
+    <link rel='stylesheet' href='css/mapstyle.css'>
+    
+    <script src='js/d3.v3.min.js' type='text/javascript'></script>
+    <script src='js/topojson.js' type='text/javascript'></script>
+    <script src='js/colorbrewer.js' type='text/javascript'></script>
+    <script src='js/cartogram.js' type='text/javascript'></script>
+    
+    <style>
+    .rChart {
+      display: block;
+      margin-left: auto; 
+      margin-right: auto;
+      width: 800px;
+      height: 400px;
+    }  
+    </style>
+    
+  </head>
+  <body >
+    
+    
+        <div id = 'chart136839c06646' class = 'carto' style='height:100%;width:100%;'>
+          <div id='map-container'>
+            <!--img id='placeholder' alt='placeholder image for old browsers' src='placeholder.png'-->
+            <svg id = 'map' style = 'height:100%; width:100%' viewbox = '0 0 800 400'>
+          </svg>
+          </div>
+        </div>    
+    <script>
+  var opts = {
+ "dom": "chart136839c06646",
+"width":    800,
+"height":    400,
+"map": "worldcountries.topojson",
+"id": "chart136839c06646" 
+};
+  
+  //copied mostly from https://gist.github.com/mbostock/8fadc5ac9c2a9e7c5ba2
+  
+  //drawCartogram = (function(){
+    colors = colorbrewer.RdYlBu[3]
+            .reverse()
+            .map(function(rgb) { return d3.hsl(rgb); });
+
+
+    var width = opts.width,
+      height = opts.height;
+    
+    var proj = (opts.projection) ? opts.projection : d3.geo.mercator();
+    
+    proj
+        .translate([width / 2, height / 2])
+        .scale((width - 1) / 2 / Math.PI);
+     
+    var zoom = d3.behavior.zoom()
+        .scaleExtent([1, 8])
+        .on("zoom", zoomed);
+     
+    var path = d3.geo.path()
+        .projection(proj);
+     
+    var svg = d3.select( chart136839c06646 ).select("svg")
+        .attr("width", width)
+        .attr("height", height)
+        .attr("id","map")
+      .append("g");
+      
+      
+    svg.append("rect")
+        .attr("class", "overlay")
+        .attr("width", width)
+        .attr("height", height)
+        .style("fill","none")
+        .style("pointer-events","all")
+     
+    svg
+        .call(zoom)
+        .call(zoom.event);         
+     
+        
+    worldcountries = svg.append("g")
+        .attr("id", "worldcountries")
+        .selectAll("path");
+     
+        
+    var carto = d3.cartogram()
+        .projection(proj);
+     
+    d3.json( opts.map , function(error, world) {
+      var features = carto.features(world, world.objects.worldcountries.geometries);
+      
+      worldcountries = worldcountries.data( features )
+          .enter()
+          .append("path")
+            .attr("class", "country")
+            .attr("d", path)
+            .attr("fill", "#fafafa")
+            .attr("cursor","pointer");
+     
+    });
+     
+    function zoomed() {
+      svg.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+    }
+  //})();
+  
+</script>
+    
+    <script></script>    
+  </body>
+</html>

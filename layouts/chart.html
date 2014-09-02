@@ -4,78 +4,143 @@
   //copied mostly from https://gist.github.com/mbostock/8fadc5ac9c2a9e7c5ba2
   
   //drawCartogram = (function(){
-    colors = colorbrewer.RdYlBu[3]
-            .reverse()
+    var colors = colorbrewer.RdYlBu[3]
+            //.reverse()
             .map(function(rgb) { return d3.hsl(rgb); });
 
 
     var width = opts.width,
       height = opts.height;
     
-    var proj = (opts.projection) ? opts.projection : d3.geo.mercator(),
-      topology,
-      geometries,
-      rawData,
-      dataById = {},
-      carto = d3.cartogram()
-        .projection(proj)
-        .properties(function(d) {
-          return dataById[d.id];
-        })
-        .value(function(d) {
-          return +d.properties[field];
-        });
-
+    var proj = (opts.projection) ? opts.projection : d3.geo.mercator();
     
     
-    proj
+    /*proj
         .translate([width / 2, height / 2])
         .scale((width - 1) / 2 / Math.PI);
-     
+    */
     var zoom = d3.behavior.zoom()
-        .scaleExtent([1, 8])
-        .on("zoom", zoomed);
-     
+      .translate([0,0])
+      .scale(.7)
+      //.scaleExtent([0.5, 10.0])
+      .on("zoom", updateZoom)
+  
+    
     var path = d3.geo.path()
-        .projection(proj);
-     
+      .projection(proj);
+    
+    var map = d3.select("#map")
+    
     var svg = d3.select( {{chartId}} ).select("svg")
-        .attr("width", width)
-        .attr("height", height)
-        .attr("id","map")
+      .attr("id","map")
       .append("g");
      
-    var g = svg.append("g");
-     
-    svg.append("rect")
-        .attr("class", "overlay")
-        .attr("width", width)
-        .attr("height", height);
-     
-    svg
-        .call(zoom)
-        .call(zoom.event);
+  
+    updateZoom();
+    
+
+    function updateZoom() {
+      var scale = zoom.scale();
+      svg.attr("transform",
+        "translate(" + zoom.translate() + ") " +
+        "scale(" + [scale, scale] + ")");
+    }
+
+    worldcountries = svg.append("g")
+        .attr("id", "worldcountries")
+        .selectAll("path");
+
+    // set this data up as global so we can access later and test
+    var data = {};
+
+    // we will need to change opts data to proper format
+    // where we will nest by country id/name
+    opts.data[Object.keys(opts.data)[0]].forEach( function(d,i) {
+      
+      data[ d ] = {};
+      
+      Object.keys( opts.data ).map( function(k) {
+        data[d][k] = opts.data[k][i];
+      })
+    })
+    
+    var carto = d3.cartogram()
+        .projection(proj)
+        .properties( function(d) {
+          return data[d.id];
+        })
+        .value( function(d) {
+          return (typeof d.properties[ opts.x ] == "undefined" ) ? 0 : +d.properties[ opts.x ];
+        });
      
     d3.json( opts.map , function(error, world) {
-      g.append("path")
-          .datum({type: "Sphere"})
-          .attr("class", "sphere")
-          .attr("d", path);
-     
-      g.append("path")
-          .datum(topojson.merge(world, world.objects.countries.geometries))
-          .attr("class", "land")
-          .attr("d", path);
-     
-      g.append("path")
-          .datum(topojson.mesh(world, world.objects.countries, function(a, b) { return a !== b; }))
-          .attr("class", "boundary")
-          .attr("d", path);
+      var features = carto.features(world, world.objects.worldcountries.geometries);
+      
+      var value = function(d) {
+            return (typeof d.properties[ opts.x ] == "undefined" ) ? 0 : +d.properties[ opts.x ];
+          },
+          values = features
+            .map(value)
+            .filter(function(n) {
+              return !isNaN(n);
+            })
+            .sort(d3.ascending),
+          lo = values[0],
+          hi = values[values.length - 1];
+
+      var color = d3.scale.linear()
+        .range(colors)
+        .domain(lo < 0
+          ? [lo, 0, hi]
+          : [lo, d3.mean(values), hi]);
+
+      // normalize the scale to positive numbers
+      var scale = d3.scale.linear()
+        .domain([lo, hi])
+        .range([10, 1000]);
+        
+      worldcountries = worldcountries.data( features )
+          .enter()
+          .append("path")
+            .attr("class", "country")
+            .attr("id", function(d) {
+            //console.log(d)
+              return d.properties.NAME;
+              //return d.objects.worldcountries.geometries.id;
+            })
+            .attr("fill", "#fafafa")
+            .attr("cursor","pointer")
+            .attr("fill", function(d) {
+              return color(value(d));
+            })
+            .attr("d", path);        
+        
+      // tell the cartogram to use the scaled values
+      carto.value(function(d) {
+        return scale(value(d));
+      });
+      
+      // generate the new features, pre-projected
+      var features = carto(world, world.objects.worldcountries.geometries).features;
+    
+          
+      worldcountries = worldcountries.data( features )            
+      worldcountries.transition()
+          .duration(2750)
+          .ease("linear")
+          .attr("d", carto.path);            
+
     });
-     
+    
+
+    
     function zoomed() {
-      g.attr("transform", "translate(" + d3.event.translate + ")scale(" + d3.event.scale + ")");
+      var scale = zoom.scale();
+      layer.attr("transform",
+        "translate(" + zoom.translate() + ") " +
+        "scale(" + [scale, scale] + ")");
     }
+    
   //})();
   
 </script>
