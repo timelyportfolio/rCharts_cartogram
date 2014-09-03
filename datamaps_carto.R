@@ -108,6 +108,7 @@ var carto = d3.cartogram()
       .attr('d', carto.path);
 
   d3.selectAll('.labels text')
+      .transition().duration(2750)
       .attr('x',function(d,i){
         return carto.path.centroid(d3.selectAll('.datamaps-subunit').data()[i])[0]
       })
