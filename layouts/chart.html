@@ -121,11 +121,19 @@
       });
       
       // generate the new features, pre-projected
-      var features = carto(world, world.objects.worldcountries.geometries).features;
-    
+      var features = carto(world, world.objects.worldcountries).features;
+
+
+      worldcountries = worldcountries.data( features )
+      
+      // update the data
+      worldcountries
+        .append("title")
+          .text(function(d) {
+            return [d.properties.FULLNAME, d.properties[ opts.x ]].join(": ");
+          });
           
-      worldcountries = worldcountries.data( features )            
-      worldcountries.transition()
+      worldcountries.transition().delay(1000)
           .duration(2750)
           .ease("linear")
           .attr("d", carto.path);            
