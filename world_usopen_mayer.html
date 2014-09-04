@@ -8,34 +8,26 @@
     <script src='js/topojson.v1.min.js' type='text/javascript'></script>
     <script src='js/colorbrewer.js' type='text/javascript'></script>
     <script src='js/cartogram.mod.js' type='text/javascript'></script>
+    <script src='js/d3-tip.js' type='text/javascript'></script>
     
-    <style>
-    .rChart {
-      display: block;
-      margin-left: auto; 
-      margin-right: auto;
-      width: 800px;
-      height: 400px;
-    }  
-    </style>
-    
+  
   </head>
   <body >
     
     
-      <div id = 'chart2f003aac6918' class = 'carto' style='height:100%;width:100%;'>
+    <div id = 'chart2f003aac6918' class = 'carto' style='height:100%;width:100%;'>
       <h1> Cartogram of the US Open </h1>
       <form>
-      <p>
-      <label>Scale by <select id='field'></select></label>
-      <span id='status'></span><br>
-      </p>
+        <p>
+        <label>Scale by <select id='field'></select></label>
+        <span id='status'></span><br>
+        </p>
       </form>
       <div id='map-container'>
-      <svg id = 'map' style = 'height:100%; width:100%' viewbox = '0 0 800 400'>
-      </svg>
+        <svg id = 'map' style = 'height:100%; width:100%' viewbox = '0 0 800 400'>
+        </svg>
       </div>
-      </div>    
+    </div>    
     
     <script>
 
@@ -51,6 +43,7 @@
  "dom": "chart2f003aac6918",
 "width":    800,
 "height":    400,
+"tooltip": { "direction": null, "offset": null },
 "data": {
  "NAME": [ "-99", "AE", "AF", "AG", "AL", "AM", "AO", "AQ", "AR", "AT", "AU", "AZ", "BA", "BB", "BD", "BE", "BF", "BG", "BH", "BI", "BJ", "BN", "BO", "BR", "BS", "BT", "BW", "BY", "BZ", "CA", "CD", "CF", "CG", "CH", "CI", "CK", "CL", "CM", "CN", "CO", "CR", "CU", "CV", "CW", "CY", "CZ", "DE", "DJ", "DK", "DM", "DO", "DZ", "EC", "EE", "EG", "EH", "ER", "ES", "ET", "FI", "FJ", "FK", "FM", "FR", "GA", "GB", "GE", "GF", "GH", "GL", "GM", "GN", "GP", "GQ", "GR", "GT", "GU", "GW", "GY", "HK", "HN", "HR", "HT", "HU", "ID", "IE", "IL", "IM", "IN", "IQ", "IR", "IS", "IT", "JM", "JO", "JP", "KE", "KG", "KH", "KI", "KM", "KP", "KR", "KW", "KZ", "LA", "LB", "LC", "LK", "LR", "LS", "LT", "LU", "LV", "LY", "MA", "MD", "ME", "MG", "MH", "MK", "ML", "MM", "MN", "MP", "MR", "MT", "MU", "MV", "MW", "MX", "MY", "MZ", "NA", "NC", "NE", "NF", "NG", "NI", "NL", "NO", "NP", "NR", "NU", "NZ", "OM", "PA", "PE", "PF", "PG", "PH", "PK", "PL", "PR", "PS", "PT", "PW", "PY", "QA", "RE", "RO", "RS", "RU", "RW", "SA", "SB", "SC", "SD", "SE", "SG", "SI", "SK", "SL", "SN", "SO", "SR", "SS", "ST", "SV", "SY", "SZ", "TC", "TD", "TF", "TG", "TH", "TJ", "TK", "TL", "TM", "TN", "TO", "TR", "TT", "TV", "TW", "TZ", "UA", "UG", "US", "UY", "UZ", "VA", "VC", "VE", "VI", "VN", "VU", "WF", "WS", "XK", "YE", "YT", "ZA", "ZM", "ZW" ],
 "NRLANGUAGES2010": [ 0, 1, 30, 1, 1, 3, 23, 0, 15, 2, 268, 8, 1, 1, 14, 4, 52, 2, 1, 1, 40, 5, 37, 201, 2, 20, 16, 1, 2, 76, 183, 56, 38, 6, 66, 4, 9, 242, 187, 82, 6, 2, 1, 1, 1, 4, 18, 0, 4, 1, 1, 13, 18, 2, 6, 0, 5, 14, 80, 7, 8, 0, 17, 18, 27, 13, 8, 3, 64, 1, 1, 27, 1, 9, 10, 51, 1, 12, 8, 1, 5, 5, 2, 2, 719, 3, 22, 1, 368, 12, 56, 2, 19, 2, 2, 14, 47, 2, 14, 1, 4, 0, 2, 0, 1, 50, 0, 1, 5, 25, 1, 3, 1, 3, 6, 7, 2, 0, 11, 1, 1, 32, 85, 4, 2, 3, 2, 1, 1, 8, 287, 110, 30, 16, 36, 10, 1, 486, 8, 12, 6, 105, 2, 1, 2, 7, 7, 100, 7, 826, 169, 57, 6, 1, 2, 3, 3, 15, 0, 1, 3, 5, 91, 1, 4, 71, 1, 63, 11, 2, 1, 2, 12, 25, 8, 11, 53, 3, 3, 3, 1, 1, 110, 0, 19, 33, 5, 1, 17, 2, 4, 3, 11, 2, 1, 22, 110, 5, 34, 210, 1, 5, 2, 1, 27, 2, 79, 108, 2, 1, 1, 6, 1, 19, 26, 7 ],
@@ -82,7 +75,22 @@
 ],
 "id": "chart2f003aac6918" 
 };
-      
+
+
+      var tip = d3.tip()
+          .html(function(d) {
+            return [
+                    '<h3>' + d.properties["FULLNAME"] + '</h3>' ,
+                    '<b> Men\'s Singles: </b>' + (d.properties["Men\'s Singles"] ? d.properties["Men\'s Singles"] : 0) + '<br/>',
+                    '<b> Women\'s Singles: </b>' + (d.properties["Women\'s Singles"] ?d.properties["Women\'s Singles"] : 0) + '<br/>' ,
+                  ].join("\n");
+          })
+          .direction("e")
+          .offset(
+            function() {
+              return [0, -d3.event.target.getBBox().width / 2]
+            })
+      d3.select("#map").call(tip)
       
       // set this data up as global so we can access later and test
       var dataById = {};
@@ -202,6 +210,7 @@
 
       
       d3.json(opts.map, function(error, topo) {
+        
         topology = topo;
         geometries = topology.objects.worldcountries;
         //geometries = features.properties.geometry;
@@ -229,10 +238,15 @@
             })
             .attr("fill", "#fafafa")
             .attr("d", path)
-            .attr("cursor","pointer");
+            .attr("cursor","pointer")
+            .on('mouseover',function(e){
+              tip.show(d3.select(d3.event.target).datum());
+            })
+            .on('mouseout',function(e){
+              tip.hide(d3.select(d3.event.target).datum());
+            });
 
-        worldcountries.append("title");
-        
+      
         parseHash();
       }
 
