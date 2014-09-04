@@ -126,7 +126,7 @@
       
       d3.json(opts.map, function(error, topo) {
         topology = topo;
-        geometries = topology.objects.worldcountries.geometries;
+        geometries = topology.objects.worldcountries;
         //geometries = features.properties.geometry;
         
         
@@ -146,7 +146,7 @@
       });
 
       function init() {
-        var features = carto.features(topology, geometries),
+        var features = carto.features(topology, geometries).features,
             path = d3.geo.path()
               .projection(proj);
               //console.log(features);

@@ -41,7 +41,7 @@ map$set(
 map
 
 
-options(viewer=NULL)
+#options(viewer=NULL)
 map$addAssets(
   jshead = paste0(getwd(),"./js/cartogram.mod.js")
 )

@@ -74,7 +74,7 @@
         });
      
     d3.json( opts.map , function(error, world) {
-      var features = carto.features(world, world.objects.worldcountries.geometries);
+      var features = carto.features(world, world.objects.worldcountries).features;
       
       var value = function(d) {
             return (typeof d.properties[ opts.x ] == "undefined" ) ? 0 : +d.properties[ opts.x ];
