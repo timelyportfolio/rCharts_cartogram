@@ -90,6 +90,8 @@
             function() {
               return [0, -d3.event.target.getBBox().width / 2]
             })
+          .style("pointer-events","none")
+          
       d3.select("#map").call(tip)
       
       // set this data up as global so we can access later and test
